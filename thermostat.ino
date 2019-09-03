@@ -1,58 +1,59 @@
+
 /*
-  Code by: www.munphurid.com
-  M.Hashir
+  Code by Wardah Arshad
 
   This is a code for a thermostat
-  It turns off or turns on LED when temperature crosses a limit
+  It turns off or turns on LED when humidity crosses a limit
   This code can also be used for fire alarm by connecting buzzer
 
   Hardware:
   - Arduino
-  - LM35 (Temperature sensor)
-  - Buzzer (Optional)
+  - 3 male to female wires
+  - Dht11 module (Can be bought from www.munphurid.com)
 
-  Connections:
-  (When flat side of LM35 faces you with legs downward, leftmost is pin 1)
+  When sensor holes side is facing towards you with legs downward, the left most pin is pin 1.
 
-  Connect pin1 of LM35 to pin 5V of Arduino
-  Connect pin2 of LM35 to pin A0 of Arduino
-  Connect pin3 of LM35 to pin GND of Arduino
+  Connections for DHT11:
+  Connect pin1 of dht11 to pin 5V of Arduino
+  Connect pin2 of dht11 to pin A0 of Arduino
+  Connect pin4 of dht11 to pin GND of Arduino
+
+  Connections for LED:
+  Connect the longer leg of the LED to pin 3 of Arduino
+  Connect shorter leg of LED to one leg of a resistor
+  Connect the other leg of resistor to GND pin of Arduino
 */
 
-float settemperature = 30.0;                //Set temperature can be changed... device turns on or off at this temperature
-int LM35 = A0;                            //LDR is connected to pin A0 of Arduino
-int input;          //Will be used later on
-float temperature;    //Will be used later on
-int device = 13;
+#include <dht11.h>                  //Do not edit
+int dht_sensorpin = A0;             //Pin on which DHT sensor is connected
+dht11 DHT;                          //Do not edit
+int humidity;                       //Do not edit
+int temperature;                    //Do not edit
+int LED = 3;                        //pin on which Led is connected
 
 void setup() {
-
-  pinMode(LM35, INPUT_PULLUP);   //Donot edit this line
-  pinMode(device, OUTPUT);         //Do not edit this line
-  Serial.begin(9600);          //Donot edit this line
+  Serial.begin(9600);               //Do not edit... sets speed of communication
+  delay(1000);                      //Do not edit
 }
-
 
 void loop() {
 
-  input = analogRead(LM35);      //Taking input from LM35 Temperature sensor
+  DHT.read(dht_sensorpin);                          //Do not edit this line
+  humidity = DHT.humidity;                          //Do not edit this line
+  temperature = DHT.temperature;                   //Do not edit this line
 
-  temperature = (input / 1024.0) * 500.0;          //Conversion of units
+  Serial.print("Current humidity = ");            //Do not edit this line
+  Serial.print(humidity);                         //Do not edit this line
+  Serial.print("%, temperature = ");             //Do not edit this line
+  Serial.print(temperature);                     //Do not edit this line
+  Serial.println("C  ");                        //Do not edit this line
+  delay(5000);                                  //Wait for 5000 milliseconds
 
-  Serial.print("The temperature in Centrigrade is = ");      //Print this text on screen
-  Serial.println(temperature);    //Show the temperature on screen
-
-  if (temperature > settemperature) {
-    digitalWrite(device, HIGH);             //If temperature exceeds "settemperature", device is turned on
+  if (humidity > 10) {                        //if humidity is above this value,      (you can change the value)
+    pinMode(LED, HIGH);                       // Led light ON...
+  }
+  else {                                      //otherwise,
+    pinMode(LED, LOW);                        // Led light OFF
   }
 
-  else {
-    digitalWrite(device, LOW);             //If temperature is below "settemperature", device is turned off
-  }
-
-  delay(1000);                    //Wait for sometime before taking the next input
-
-
-
-  //now go to the start of void loop()
 }
