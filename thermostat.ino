@@ -49,7 +49,7 @@ void loop() {
   Serial.println("C  ");                        //Do not edit this line
   delay(5000);                                  //Wait for 5000 milliseconds
 
-  if (humidity > 10) {                        //if humidity is above this value,      (you can change the value)
+  if (humidity > 10) {                        //if humidity is above this value, this is threshold value...     (you can change the value)
     pinMode(LED, HIGH);                       // Led light ON...
   }
   else {                                      //otherwise,
