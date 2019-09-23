@@ -1,59 +1,71 @@
-
 /*
-  Code by Wardah Arshad
+Code by:
+M.Hashir and Areej
 
-  This is a code for a thermostat
-  It turns off or turns on LED when humidity crosses a limit
-  This code can also be used for fire alarm by connecting buzzer
+This is a code that controls a component based on temperature and humidity measured by sensor
 
-  Hardware:
-  - Arduino
-  - 3 male to female wires
-  - Dht11 module (Can be bought from www.munphurid.com)
+Hardware:
+- Arduino
+- 3 wires
+- DHT11 sensor
+- Buzzer
 
-  When sensor holes side is facing towards you with legs downward, the left most pin is pin 1.
+Connections:
+When perforated side (side with holes) of DHT sensor is towards you, the left most leg is pin 1 and right most leg is pin 4
+Connect pin 1 of dht11 to pin 5V of Arduino
+Connect pin 2 of dht11 to pin 2 of Arduino
+Connect pin 4 of dht11 to pin GND of Arduino
 
-  Connections for DHT11:
-  Connect pin1 of dht11 to pin 5V of Arduino
-  Connect pin2 of dht11 to pin A0 of Arduino
-  Connect pin4 of dht11 to pin GND of Arduino
+Connect longer leg of buzzer to pin 11 of Arduino
+Connect shorter leg of buzzer to GND of Arduino
 
-  Connections for LED:
-  Connect the longer leg of the LED to pin 3 of Arduino
-  Connect shorter leg of LED to one leg of a resistor
-  Connect the other leg of resistor to GND pin of Arduino
+A built in LED is already connected on pin 13
 */
 
-#include <dht11.h>                  //Do not edit
-int dht_sensorpin = A0;             //Pin on which DHT sensor is connected
-dht11 DHT;                          //Do not edit
-int humidity;                       //Do not edit
-int temperature;                    //Do not edit
-int LED = 3;                        //pin on which Led is connected
+#include <dht11.h>                    //Install this library using library manager
+int dhtpin= 2;                        //DHT11 is connected to pin 2
+int buzzer = 11;
+int led = 13;
 
-void setup() {
-  Serial.begin(9600);               //Do not edit... sets speed of communication
-  delay(1000);                      //Do not edit
-}
+dht11 DHT;
+ 
+void setup(){
+ 
+  pinMode(buzzer,OUTPUT);
+  pinMode(led,OUTPUT);
+  Serial.begin(9600);                                            //donot edit this line
+  delay(1000);                                                   //wait for 1 second
+  Serial.println("DHT11 Humidity & temperature Sensor\n\n");     //Print this on Serial monitor when program starts
+  delay(1000);                                                   //wait for 1 second
+ 
+}           
+ 
+void loop(){
+  
+    DHT.read(dht_apin);                            //Read Humidity and Temperature value from sensor
+    int temperature = DHT.temperature;
+    int humidity = DHT.humidity;
+    Serial.print("Current humidity = ");           //Print this on Serial monitor
+    Serial.print(humidity);                    //Print the value of Humidity on serial monitor
+    Serial.print("%  ");                           //donot edit this line
+    Serial.print("Temperature = ");                //Print this on Serial monitor
+    Serial.print(temperature);                 //Print the value of Temperature on serial monitor
+    Serial.println("C  ");                         //donot edit this line
+    
+    if(temperature<30){         //If temperature is less than 30 degree
+    pinMode(led,HIGH);          //Turn on LED
+    }
+    else{                       //Otherwise
+    pinMode(led,LOW);           //Turn off LED
+    }
 
-void loop() {
+      if(humidity<40){         //If humidity is less than 40 percent
+    pinMode(buzzer,HIGH);          //Turn on buzzer
+    }
+    else{                       //Otherwise
+    pinMode(buzzer,LOW);           //Turn off buzzer
+    }
 
-  DHT.read(dht_sensorpin);                          //Do not edit this line
-  humidity = DHT.humidity;                          //Do not edit this line
-  temperature = DHT.temperature;                   //Do not edit this line
-
-  Serial.print("Current humidity = ");            //Do not edit this line
-  Serial.print(humidity);                         //Do not edit this line
-  Serial.print("%, temperature = ");             //Do not edit this line
-  Serial.print(temperature);                     //Do not edit this line
-  Serial.println("C  ");                        //Do not edit this line
-  delay(5000);                                  //Wait for 5000 milliseconds
-
-  if (humidity > 10) {                        //if humidity is above this value, this is threshold value...     (you can change the value)
-    pinMode(LED, HIGH);                       // Led light ON...
-  }
-  else {                                      //otherwise,
-    pinMode(LED, LOW);                        // Led light OFF
-  }
-
+    delay(5000);                                   //Wait for 5 seconds  
+  
 }
