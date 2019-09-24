@@ -23,7 +23,7 @@ A built in LED is already connected on pin 13
 */
 
 #include <dht11.h>                    //Install this library using library manager
-int dhtpin= 2;                        //DHT11 is connected to pin 2
+int dht_pin= 2;                        //DHT11 is connected to pin 2
 int buzzer = 11;
 int led = 13;
 
@@ -42,7 +42,7 @@ void setup(){
  
 void loop(){
   
-    DHT.read(dht_apin);                            //Read Humidity and Temperature value from sensor
+    DHT.read(dht_pin);                            //Read Humidity and Temperature value from sensor
     int temperature = DHT.temperature;
     int humidity = DHT.humidity;
     Serial.print("Current humidity = ");           //Print this on Serial monitor
@@ -53,17 +53,17 @@ void loop(){
     Serial.println("C  ");                         //donot edit this line
     
     if(temperature<30){         //If temperature is less than 30 degree
-    pinMode(led,HIGH);          //Turn on LED
+    digitalWrite(led,HIGH);          //Turn on LED
     }
     else{                       //Otherwise
-    pinMode(led,LOW);           //Turn off LED
+    digitalWrite(led,LOW);           //Turn off LED
     }
 
       if(humidity<40){         //If humidity is less than 40 percent
-    pinMode(buzzer,HIGH);          //Turn on buzzer
+    digitalWrite(buzzer,HIGH);          //Turn on buzzer
     }
     else{                       //Otherwise
-    pinMode(buzzer,LOW);           //Turn off buzzer
+    digitalWrite(buzzer,LOW);           //Turn off buzzer
     }
 
     delay(5000);                                   //Wait for 5 seconds  
